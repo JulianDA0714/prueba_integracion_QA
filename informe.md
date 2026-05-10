@@ -800,7 +800,7 @@ Esta secci√≥n consolida todas las capturas de pantalla que respaldan la ejecuci√
 
 ---
 
-![E-KFK-17](evidencias/kafka/image copy.png)
+![E-KFK-17](evidencias/kafka/image_copy.png)
 
 *E-KFK-17. Evidencia adicional Kafka.*
 
