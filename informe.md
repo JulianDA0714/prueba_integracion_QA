@@ -627,3 +627,180 @@ services:
 > - **Modo KRaft:** este compose usa Kafka 3.7 en modo KRaft (`PROCESS_ROLES=broker,controller`), sin ZooKeeper. Es lo recomendado para versiones modernas.
 > - **Listeners duales:** `PLAINTEXT` para comunicación interna entre contenedores (`kafka:9092`) y `EXTERNAL` para acceso desde el host (`localhost:29092`).
 > - **`inventory-consumer` sin `container_name`:** lo dejamos así para poder escalarlo con `--scale` (ver CP-10).
+
+---
+
+## 7. Galería completa de evidencias
+
+Esta sección consolida todas las capturas de pantalla que respaldan la ejecución de los casos de prueba.
+
+### 7.1 Evidencias RabbitMQ
+
+![E-RMQ-01](evidencias/rabbitmq/01-contenedores-corriendo.png)
+
+*E-RMQ-01. Stack RabbitMQ levantado — 3 contenedores en estado healthy.*
+
+---
+
+![E-RMQ-02](evidencias/rabbitmq/02-postman-request.png)
+
+*E-RMQ-02. Respuesta HTTP 202 desde Postman (CP-01).*
+
+---
+
+![E-RMQ-03](evidencias/rabbitmq/03-rabbitmq-cola-pedidos.png)
+
+*E-RMQ-03. Cola `pedidos` en RabbitMQ Management con mensajes encolados (CP-02).*
+
+---
+
+![E-RMQ-04](evidencias/rabbitmq/04-logs-orders-api.png)
+
+*E-RMQ-04. Logs de `orders-api` publicando mensajes en la cola (CP-02).*
+
+---
+
+![E-RMQ-05](evidencias/rabbitmq/05-logs-worker.png)
+
+*E-RMQ-05. Logs del `notification-worker` procesando mensajes (CP-03).*
+
+---
+
+![E-RMQ-06](evidencias/rabbitmq/06-worker-apagado-cola-acumulada.png)
+
+*E-RMQ-06. Cola acumulada con worker apagado (CP-09).*
+
+---
+
+![E-RMQ-07](evidencias/rabbitmq/07-worker-recuperado-procesa.png)
+
+*E-RMQ-07. Worker recuperado procesando el backlog (CP-09 / CP-12).*
+
+---
+
+![E-RMQ-08](evidencias/rabbitmq/08-multiples-workers-corriendo.png)
+
+*E-RMQ-08. Tres réplicas del worker corriendo simultáneamente (CP-10).*
+
+---
+
+![E-RMQ-09](evidencias/rabbitmq/09-distribucion-mensajes.png)
+
+*E-RMQ-09. Distribución round-robin de mensajes entre los 3 workers (CP-10).*
+
+---
+
+![E-RMQ-10](evidencias/rabbitmq/10-codigo-api-no-llama-worker.png)
+
+*E-RMQ-10. Código de `orders-api`: solo usa AMQP, sin llamadas HTTP al worker (CP-08).*
+
+---
+
+![E-RMQ-11](evidencias/rabbitmq/11-codigo-worker-sin-endpoints.png)
+
+*E-RMQ-11. Código del `notification-worker`: sin Express ni endpoints HTTP (CP-08).*
+
+---
+
+### 7.2 Evidencias Kafka
+
+![E-KFK-01](evidencias/kafka/12-contenedores-kafka.png)
+
+*E-KFK-01. Stack Kafka levantado — 6 contenedores corriendo.*
+
+---
+
+![E-KFK-02](evidencias/kafka/13-postman-kafka.png)
+
+*E-KFK-02. Respuesta HTTP 202 desde Postman para la POC de Kafka (CP-04).*
+
+---
+
+![E-KFK-03](evidencias/kafka/14-kafka-ui-topico.png)
+
+*E-KFK-03. Kafka UI mostrando el tópico `orders.events` (CP-04).*
+
+---
+
+![E-KFK-04](evidencias/kafka/15-kafka-ui-mensaje.png)
+
+*E-KFK-04. Detalle del evento `OrderCreated` en Kafka UI (CP-04).*
+
+---
+
+![E-KFK-05](evidencias/kafka/16-kafka-ui-consumer-groups.png)
+
+*E-KFK-05. Consumer groups de los 3 consumidores en Kafka UI (CP-05).*
+
+---
+
+![E-KFK-06](evidencias/kafka/17-logs-inventory.png)
+
+*E-KFK-06. Logs de `inventory-consumer` procesando el evento (CP-05).*
+
+---
+
+![E-KFK-07](evidencias/kafka/18-logs-billing.png)
+
+*E-KFK-07. Logs de `billing-consumer` procesando el evento (CP-05).*
+
+---
+
+![E-KFK-08](evidencias/kafka/19-logs-notification.png)
+
+*E-KFK-08. Logs de `notification-consumer` procesando el evento (CP-05).*
+
+---
+
+![E-KFK-09](evidencias/kafka/20-inventory-apagado.png)
+
+*E-KFK-09. `inventory-consumer` detenido con el resto del stack activo (CP-09).*
+
+---
+
+![E-KFK-10](evidencias/kafka/21-eventos-en-topico.png)
+
+*E-KFK-10. Eventos acumulados en el tópico con consumer apagado (CP-09).*
+
+---
+
+![E-KFK-11](evidencias/kafka/22-inventory-recupera.png)
+
+*E-KFK-11. `inventory-consumer` recuperando el backlog al reiniciar (CP-09 / CP-12).*
+
+---
+
+![E-KFK-12](evidencias/kafka/23-multiples-inventory.png)
+
+*E-KFK-12. Dos réplicas de `inventory-consumer` tras `--scale` (CP-10).*
+
+---
+
+![E-KFK-13](evidencias/kafka/24-distribucion-en-grupo.png)
+
+*E-KFK-13. Solo una réplica recibe eventos — limitación por particiones (CP-10).*
+
+---
+
+![E-KFK-14](evidencias/kafka/25-codigo-api-kafka.png)
+
+*E-KFK-14. Código de `orders-api` en Kafka: solo usa `producer.send()` (CP-08).*
+
+---
+
+![E-KFK-15](evidencias/kafka/26-codigo-consumer-sin-http.png)
+
+*E-KFK-15. Código de consumer Kafka: sin Express ni endpoints HTTP (CP-08).*
+
+---
+
+![E-KFK-16](evidencias/kafka/image.png)
+
+*E-KFK-16. Evidencia adicional Kafka.*
+
+---
+
+![E-KFK-17](evidencias/kafka/image copy.png)
+
+*E-KFK-17. Evidencia adicional Kafka.*
+
