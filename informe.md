@@ -1,18 +1,30 @@
-# Taller de Pruebas de Integración
-
-**Arquitecturas Reactivas con RabbitMQ y Kafka**
+<div align="center">
 
 ---
 
-## Portada
+# INSTITUTO TECNOLÓGICO METROPOLITANO  (ITM)
+## INGENIERÍA DE SISTEMAS
+### ASEGURAMIENTO DE LA CALIDAD DEL SOFTWARE
 
-| Campo | Detalle |
-|---|---|
-| Materia | (completar) |
-| Docente | (completar) |
-| Integrantes | (completar) |
-| Fecha de entrega | (completar) |
-| Repositorio | (completar) |
+---
+
+# Pruebas de Integración en Arquitecturas Basadas en Mensajes y Eventos
+
+**Taller — 20%**
+
+---
+
+| Campo             | Detalle                                                                 |
+|-------------------|-------------------------------------------------------------------------|
+| **Materia**       | Aseguramiento de la Calidad del Software                                |
+| **Docente**       | Carlos Andrés Jaramillo Patiño                                          |
+| **Integrantes**   | Julian David Agudelo Acevedo · Juan David Florez · Santiago Stiven Gomez |
+| **Fecha de entrega** | 10 de mayo de 2026                                                   |
+| **Repositorio**   | https://github.com/JulianDA0714/prueba_integracion_QA                   |
+
+---
+
+</div>
 
 ---
 
