@@ -10,7 +10,6 @@
 
 # Pruebas de Integración en Arquitecturas Basadas en Mensajes y Eventos
 
-**Taller — 20%**
 
 ---
 
