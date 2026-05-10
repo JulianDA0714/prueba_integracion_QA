@@ -1,0 +1,70 @@
+services:
+  kafka:
+    image: bitnamilegacy/kafka:3.7
+    container_name: kafka
+    ports:
+      - "29092:29092"
+    environment:
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,EXTERNAL://:29092,CONTROLLER://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:29092
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - ALLOW_PLAINTEXT_LISTENER=yes
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8080:8080"
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+    depends_on:
+      - kafka
+
+  orders-api:
+    build: ./orders-api
+    container_name: orders-api
+    ports:
+      - "3000:3000"
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - KAFKA_TOPIC=orders.events
+      - PORT=3000
+    depends_on:
+      - kafka
+
+  inventory-consumer:
+    build: ./inventory-consumer
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - KAFKA_TOPIC=orders.events
+      - KAFKA_GROUP_ID=inventory-service-group
+      - CONSUMER_NAME=inventory-consumer
+    depends_on:
+      - kafka
+
+  billing-consumer:
+    build: ./billing-consumer
+    container_name: billing-consumer
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - KAFKA_TOPIC=orders.events
+      - KAFKA_GROUP_ID=billing-service-group
+      - CONSUMER_NAME=billing-consumer
+    depends_on:
+      - kafka
+
+  notification-consumer:
+    build: ./notification-consumer
+    container_name: notification-consumer
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - KAFKA_TOPIC=orders.events
+      - KAFKA_GROUP_ID=notification-service-group
+      - CONSUMER_NAME=notification-consumer
+    depends_on:
+      - kafka

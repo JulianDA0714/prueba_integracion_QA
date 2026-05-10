@@ -1,0 +1,37 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  orders-api:
+    build: ./orders-api
+    container_name: orders-api
+    ports:
+      - "3000:3000"
+    environment:
+      - RABBITMQ_URL=amqp://admin:admin@rabbitmq:5672
+      - QUEUE_NAME=pedidos
+      - PORT=3000
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  notification-worker:
+    build: ./notification-worker
+    environment:
+      - RABBITMQ_URL=amqp://admin:admin@rabbitmq:5672
+      - QUEUE_NAME=pedidos
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
